@@ -1,55 +1,38 @@
 "use client";
 
 import React from "react";
-import { FileText, Award, Calendar, Zap } from "lucide-react";
+import { FileText, Award, ShieldCheck, Search } from "lucide-react";
 import GlassCard from "@/components/ui/GlassCard";
 
 interface RealStatsCardsProps {
-  resumesCount: number;
-  avgAtsScore: string;
-  interviewSessionsCount: number;
-  maxStreak: number;
+  skillVerificationsCount: number;
+  liveJobsScanned: number;
 }
 
 export default function RealStatsCards({
-  resumesCount,
-  avgAtsScore,
-  interviewSessionsCount,
-  maxStreak,
+  skillVerificationsCount,
+  liveJobsScanned,
 }: RealStatsCardsProps) {
   const stats = [
+
     {
-      label: "Resumes Created",
-      value: resumesCount.toString(),
-      sublabel: resumesCount > 0 ? "Optimized draft stored" : "None created yet",
-      icon: FileText,
-      glow: "purple" as const,
-    },
-    {
-      label: "Average ATS Score",
-      value: avgAtsScore,
-      sublabel: avgAtsScore !== "—" ? "Targeting 80%+" : "Scan to measure score",
-      icon: Award,
-      glow: "violet" as const,
-    },
-    {
-      label: "Mock Interviews Done",
-      value: interviewSessionsCount.toString(),
-      sublabel: interviewSessionsCount > 0 ? "Excellent practice" : "No tests taken yet",
-      icon: Calendar,
+      label: "Skill Verifications",
+      value: skillVerificationsCount.toString(),
+      sublabel: skillVerificationsCount > 0 ? "Evidence checked" : "No verifications yet",
+      icon: ShieldCheck,
       glow: "indigo" as const,
     },
     {
-      label: "Coding Streak",
-      value: `${maxStreak}d`,
-      sublabel: maxStreak > 0 ? "Consistency active" : "Solve problems to start",
-      icon: Zap,
+      label: "Live Jobs Scanned",
+      value: liveJobsScanned.toString(),
+      sublabel: liveJobsScanned > 0 ? "Market data active" : "Search to start",
+      icon: Search,
       glow: "purple" as const,
     },
   ];
 
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
       {stats.map((stat) => (
         <GlassCard
           key={stat.label}

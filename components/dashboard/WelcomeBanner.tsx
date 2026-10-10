@@ -45,7 +45,7 @@ export default function WelcomeBanner({ displayName, targetRole }: WelcomeBanner
             </h1>
 
             <p className="text-gray-300 text-sm max-w-xl leading-relaxed">
-              Your AI career workspace is ready. Tailor resumes, practice voice mocks, track coding milestones, and find internships all in one unified dashboard.
+              Your AI career workspace is ready. Verify your skills with real evidence, analyze live job market demand, and optimize your resume for real opportunities.
             </p>
 
             {targetRole ? (
@@ -71,11 +71,6 @@ export default function WelcomeBanner({ displayName, targetRole }: WelcomeBanner
             <Link href="/profile" passHref>
               <AnimatedButton variant="secondary" className="w-full sm:w-auto text-center justify-center">
                 Configure Profile
-              </AnimatedButton>
-            </Link>
-            <Link href="/dashboard/resume" passHref>
-              <AnimatedButton variant="primary" className="w-full sm:w-auto text-center justify-center">
-                Build AI Resume
               </AnimatedButton>
             </Link>
           </div>

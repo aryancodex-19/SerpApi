@@ -4,7 +4,6 @@ import { prisma } from "@/lib/db/prisma";
 import PageTransition from "@/components/ui/PageTransition";
 import SkillProofDashboard from "@/components/skillproof/SkillProofDashboard";
 import { ShieldCheck, GitBranch, Sparkles, Briefcase } from "lucide-react";
-
 export const metadata = {
   title: "SkillProof | CareerOS",
   description: "Verify resume claims against public GitHub evidence and job readiness.",

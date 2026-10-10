@@ -17,19 +17,15 @@ export const metadata = {
 };
 
 export default async function HomePage() {
-  const [totalUsers, totalResumes, totalAtsScans, interviewSessionsCount, voiceInterviewsCount] = await Promise.all([
+  const [totalUsers, totalResumes] = await Promise.all([
     prisma.user.count(),
     prisma.resume.count(),
-    prisma.aTSScan.count(),
-    prisma.interviewSession.count(),
-    prisma.voiceInterview.count(),
   ]);
 
   const stats = {
     totalUsers: totalUsers || 0,
     totalResumes: totalResumes || 0,
-    totalAtsScans: totalAtsScans || 0,
-    totalInterviews: (interviewSessionsCount || 0) + (voiceInterviewsCount || 0),
+    totalInterviews: 0,
   };
 
   return (

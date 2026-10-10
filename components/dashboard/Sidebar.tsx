@@ -11,11 +11,6 @@ import {
   Mic,
   FileText,
   ScanSearch,
-  BrainCircuit,
-  Briefcase,
-  Video,
-  Code2,
-  Share2,
   Layout,
   GitGraph,
   ShieldCheck,
@@ -23,6 +18,7 @@ import {
   Sparkles,
   PanelLeftClose,
   PanelLeftOpen,
+  Briefcase,
   type LucideIcon,
 } from "lucide-react";
 import {
@@ -45,24 +41,11 @@ const NAV_GROUPS: { name: string; items: { label: string; href: string; icon: Lu
     items: [
       { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
       { label: "Skill Assessment", href: "/dashboard/assessment", icon: ShieldCheck },
-      { label: "Gap Report", href: "/dashboard/gap-report", icon: TrendingUp },
-      { label: "AI Resume Builder", href: "/dashboard/resume", icon: FileText },
-      { label: "ATS Scanner", href: "/dashboard/ats", icon: ScanSearch },
-      { label: "Portfolio Generator", href: "/dashboard/portfolio", icon: Layout },
-      { label: "LinkedIn Optimizer", href: "/dashboard/linkedin", icon: Share2 },
       { label: "GitHub Analysis", href: "/dashboard/github", icon: GitGraph },
-      { label: "SkillProof", href: "/dashboard/skillproof", icon: Sparkles },
+      { label: "SkillProof", href: "/dashboard/skillproof", icon: ShieldCheck },
+      { label: "Gap Report", href: "/dashboard/gap-report", icon: TrendingUp },
+      { label: "Live Job Market", href: "/dashboard/job-market", icon: Briefcase },
     ]
-  },
-  {
-    name: "Practice & Search",
-    items: [
-      { label: "AI Voice Interview", href: "/dashboard/interview-voice", icon: Mic },
-      { label: "AI Interview Coach", href: "/dashboard/interview", icon: Video },
-      { label: "AI Career Mentor", href: "/dashboard/mentor", icon: BrainCircuit },
-      { label: "Coding Tracker", href: "/dashboard/coding", icon: Code2 },
-      { label: "Internship Finder", href: "/dashboard/internships", icon: Briefcase },
-    ],
   },
   {
     name: "Account",
@@ -100,11 +83,13 @@ function SidebarNav() {
                   className={`h-4 w-4 shrink-0 transition-colors ${
                     isActive
                       ? "text-purple-400 drop-shadow-[0_0_8px_rgba(168,85,247,0.8)]"
+                      : item.label === "Live Job Market"
+                      ? "text-emerald-400 drop-shadow-[0_0_8px_rgba(16,185,129,0.8)]"
                       : "text-gray-400 group-hover:text-white"
                   }`}
                 />
-                {!isCollapsed && <span className="truncate">{item.label}</span>}
-                {isActive && !isCollapsed && (
+                {!isCollapsed && <span className={`truncate ${item.label === "Live Job Market" && !isActive ? "text-emerald-400 font-bold" : ""}`}>{item.label}</span>}
+                {isActive && !isCollapsed && item.label !== "Live Job Market" && (
                   <ChevronRight className="ml-auto h-3.5 w-3.5 shrink-0 text-purple-400" />
                 )}
               </SidebarMenuButton>

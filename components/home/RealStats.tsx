@@ -2,14 +2,13 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { Users, FileText, ScanSearch, Video } from "lucide-react";
+import { Users, FileText, Video } from "lucide-react";
 import GlassCard from "@/components/ui/GlassCard";
 
 interface RealStatsProps {
   stats: {
     totalUsers: number;
     totalResumes: number;
-    totalAtsScans: number;
     totalInterviews: number;
   };
 }
@@ -30,13 +29,7 @@ export default function RealStats({ stats }: RealStatsProps) {
       icon: FileText,
       glow: "violet" as const,
     },
-    {
-      label: "ATS Scans Executed",
-      value: stats.totalAtsScans.toLocaleString(),
-      description: "Compatibility reports generated",
-      icon: ScanSearch,
-      glow: "purple" as const,
-    },
+
     {
       label: "Mock Interviews Done",
       value: stats.totalInterviews.toLocaleString(),
