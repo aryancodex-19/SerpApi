@@ -37,6 +37,8 @@ export default function SignUpPage() {
               routing="hash"
               forceRedirectUrl="/dashboard"
               fallbackRedirectUrl="/dashboard"
+              signInForceRedirectUrl="/dashboard"
+              signInFallbackRedirectUrl="/dashboard"
               appearance={{
                 elements: {
                   formButtonPrimary:
