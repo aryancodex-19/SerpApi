@@ -1,0 +1,292 @@
+"use client";
+
+import React, { useState, useCallback, useEffect, useRef } from "react";
+import Image from "next/image";
+import { toast } from "sonner";
+import GitHubConnect from "@/components/github/GitHubConnect";
+import CommitActivity from "@/components/github/CommitActivity";
+import LanguageStats from "@/components/github/LanguageStats";
+import ProjectComplexity from "@/components/github/ProjectComplexity";
+import DocQuality from "@/components/github/DocQuality";
+import GitHubScore from "@/components/github/GitHubScore";
+
+interface GitHubAnalysisClientProps {
+  existingAnalysis: {
+    username: string;
+    overallScore: number;
+    analyzedAt: string | null;
+    hasToken: boolean;
+    data: any;
+  } | null;
+  defaultUsername: string;
+}
+
+export default function GitHubAnalysisClient({
+  existingAnalysis,
+  defaultUsername,
+}: GitHubAnalysisClientProps) {
+  const [isConnected, setIsConnected] = useState(!!existingAnalysis);
+  const [username, setUsername] = useState(
+    existingAnalysis?.username || defaultUsername
+  );
+  const [analysisData, setAnalysisData] = useState<any>(
+    existingAnalysis?.data || null
+  );
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [isConnecting, setIsConnecting] = useState(false);
+  const autoAnalysisStarted = useRef(false);
+
+  const runAnalysis = useCallback(async () => {
+    setIsAnalyzing(true);
+    try {
+      const res = await fetch("/api/github/analysis", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        toast.error(data.error || "Analysis failed");
+        return;
+      }
+
+      setAnalysisData(data);
+      toast.success("GitHub analysis complete!");
+    } catch (err: any) {
+      toast.error(err.message || "Analysis failed");
+    } finally {
+      setIsAnalyzing(false);
+    }
+  }, []);
+
+  const handleAnalyze = useCallback(async () => {
+    await runAnalysis();
+  }, [runAnalysis]);
+
+  const handleConnect = useCallback(
+    async (enteredUsername: string, token?: string) => {
+      setIsConnecting(true);
+      try {
+        const res = await fetch("/api/github/connect", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username: enteredUsername, token }),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          toast.error(data.error || "Failed to connect");
+          return;
+        }
+
+        setUsername(data.username);
+        setIsConnected(true);
+        autoAnalysisStarted.current = true;
+        toast.success(`Connected to GitHub as ${data.username}`);
+
+        // Auto-trigger analysis
+        await runAnalysis();
+      } catch (err: any) {
+        toast.error(err.message || "Connection failed");
+      } finally {
+        setIsConnecting(false);
+      }
+    },
+    [runAnalysis]
+  );
+
+  const handleDisconnect = useCallback(async () => {
+    try {
+      const res = await fetch("/api/github/connect", { method: "DELETE" });
+      if (!res.ok) {
+        toast.error("Failed to disconnect");
+        return;
+      }
+      setIsConnected(false);
+      setAnalysisData(null);
+      setUsername("");
+      toast.success("GitHub disconnected");
+    } catch (err: any) {
+      toast.error(err.message || "Disconnect failed");
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!isConnected) {
+      autoAnalysisStarted.current = false;
+      return;
+    }
+
+    if (!analysisData && !isAnalyzing && !autoAnalysisStarted.current) {
+      autoAnalysisStarted.current = true;
+      void handleAnalyze();
+    }
+  }, [analysisData, handleAnalyze, isAnalyzing, isConnected]);
+
+  // ── Not Connected State ──
+  if (!isConnected) {
+    return (
+      <GitHubConnect
+        defaultUsername={defaultUsername}
+        isConnecting={isConnecting}
+        onConnect={handleConnect}
+      />
+    );
+  }
+
+  // ── Loading / Analyzing State ──
+  if (isAnalyzing && !analysisData) {
+    return <AnalyzingLoader username={username} />;
+  }
+
+  // ── Connected but no data yet (edge case) ──
+  if (!analysisData) {
+    return (
+      <div className="space-y-6">
+        <GitHubConnect
+          defaultUsername={username}
+          isConnecting={isConnecting}
+          onConnect={handleConnect}
+          isConnected
+          onDisconnect={handleDisconnect}
+          connectedUsername={username}
+        />
+      </div>
+    );
+  }
+
+  // ── Full Analysis Dashboard ──
+  const score = Number(analysisData.overallScore) || 0;
+
+  const level = analysisData.level ?? {
+    label: "Unrated",
+    color: "#a855f7",
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Connection status bar */}
+      <div className="flex items-center justify-between bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-2xl px-5 py-3 shadow-[0_4px_20px_rgba(0,0,0,0.3)]">
+        <div className="flex items-center gap-3">
+          <span className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)] animate-pulse" />
+          <span className="text-sm text-gray-300 font-medium">
+            Connected as{" "}
+            <a
+              href={`https://github.com/${username}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-purple-400 hover:text-purple-300 transition-colors font-bold"
+            >
+              @{username}
+            </a>
+          </span>
+          {analysisData.profile?.avatarUrl && (
+            <Image
+              src={analysisData.profile.avatarUrl}
+              alt={username}
+              width={24}
+              height={24}
+              unoptimized
+              className="h-6 w-6 rounded-full border border-purple-500/30"
+            />
+          )}
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleAnalyze}
+            disabled={isAnalyzing}
+            className="text-xs text-purple-400 hover:text-purple-300 font-semibold transition-colors cursor-pointer disabled:opacity-50"
+          >
+            {isAnalyzing ? "Analyzing..." : "Re-analyze"}
+          </button>
+          <span className="text-white/10">|</span>
+          <button
+            onClick={handleDisconnect}
+            className="text-xs text-red-400 hover:text-red-300 font-semibold transition-colors cursor-pointer"
+          >
+            Disconnect
+          </button>
+        </div>
+      </div>
+
+      {/* Overall Score */}
+      <GitHubScore
+        overallScore={score}
+        activityScore={analysisData.activity?.score || 0}
+        languageScore={analysisData.languages?.score || 0}
+        projectScore={analysisData.projects?.score || 0}
+        docScore={analysisData.documentation?.score || 0}
+        level={level}
+        recommendations={analysisData.recommendations || []}
+        evidenceSummary={analysisData.evidenceSummary}
+      />
+
+      {/* Activity & Languages Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {analysisData.activity && <CommitActivity data={analysisData.activity} />}
+        {analysisData.languages && <LanguageStats data={analysisData.languages} />}
+      </div>
+
+      {/* Projects & Docs Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {analysisData.projects && <ProjectComplexity data={analysisData.projects} />}
+        {analysisData.documentation && <DocQuality data={analysisData.documentation} />}
+      </div>
+    </div>
+  );
+}
+
+// ── Analyzing Loader ──
+
+function AnalyzingLoader({ username }: { username: string }) {
+  const steps = [
+    "Fetching GitHub profile...",
+    "Scanning repositories...",
+    "Analyzing commit patterns...",
+    "Evaluating language diversity...",
+    "Checking documentation quality...",
+    "Computing scores...",
+  ];
+  const [step, setStep] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setStep((prev) => (prev < steps.length - 1 ? prev + 1 : prev));
+    }, 2000);
+    return () => clearInterval(interval);
+  }, [steps.length]);
+
+  return (
+    <div className="flex flex-col items-center justify-center py-20 space-y-8">
+      {/* Animated spinner */}
+      <div className="relative">
+        <div className="h-20 w-20 rounded-full border-4 border-white/5" />
+        <div className="absolute inset-0 h-20 w-20 rounded-full border-4 border-transparent border-t-purple-500 animate-spin" />
+        <div className="absolute inset-2 h-16 w-16 rounded-full border-4 border-transparent border-t-indigo-500 animate-spin [animation-direction:reverse] [animation-duration:1.5s]" />
+      </div>
+
+      <div className="text-center space-y-3">
+        <h3 className="text-lg font-bold text-white">
+          Analyzing @{username}
+        </h3>
+        <div className="space-y-2">
+          {steps.map((s, i) => (
+            <div
+              key={s}
+              className={`text-sm transition-all duration-500 ${i < step
+                ? "text-emerald-400"
+                : i === step
+                  ? "text-purple-400 animate-pulse font-semibold"
+                  : "text-gray-600"
+                }`}
+            >
+              {i < step ? "✓" : i === step ? "●" : "○"} {s}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}

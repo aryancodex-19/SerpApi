@@ -1,0 +1,44 @@
+import type { Metadata } from "next";
+import { ClerkProvider } from "@clerk/nextjs";
+import { ThemeProvider } from "@/components/ThemeProvider";
+import { Toaster } from "@/components/Toaster";
+import AetherBackground from "@/components/ui/AetherBackground";
+import "./globals.css";
+
+export const metadata: Metadata = {
+  title: "SkillProof - Evidence-Based Skill Verification & Job Matching",
+  description:
+    "From learning to hiring, all in one place. AI-powered platform that takes students from learning → building → applying → interviewing → getting hired.",
+  keywords: [
+    "career platform",
+    "resume builder",
+    "AI interview",
+    "job search",
+    "students",
+  ],
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <ClerkProvider>
+      <html lang="en" className="dark" suppressHydrationWarning>
+        <body
+          className="antialiased min-h-screen relative bg-[#0a0a0f] text-gray-100 selection:bg-purple-500 selection:text-white"
+        >
+          <AetherBackground />
+          <ThemeProvider>
+            <div className="relative z-10 flex flex-col min-h-screen">
+              {children}
+            </div>
+
+            <Toaster />
+          </ThemeProvider>
+        </body>
+      </html>
+    </ClerkProvider>
+  );
+}
