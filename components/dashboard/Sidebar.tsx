@@ -78,19 +78,16 @@ function SidebarNav() {
                 isActive={isActive}
                 tooltip={item.label}
                 onClick={() => setMobileOpen(false)}
+                className={isActive ? "text-emerald-500 bg-emerald-500/10" : "hover:bg-zinc-900 hover:text-zinc-100 text-zinc-400"}
               >
                 <item.icon
                   className={`h-4 w-4 shrink-0 transition-colors ${
-                    isActive
-                      ? "text-purple-400 drop-shadow-[0_0_8px_rgba(168,85,247,0.8)]"
-                      : item.label === "Live Job Market"
-                      ? "text-emerald-400 drop-shadow-[0_0_8px_rgba(16,185,129,0.8)]"
-                      : "text-gray-400 group-hover:text-white"
+                    isActive ? "text-emerald-500" : "text-zinc-400 group-hover:text-zinc-100"
                   }`}
                 />
-                {!isCollapsed && <span className={`truncate ${item.label === "Live Job Market" && !isActive ? "text-emerald-400 font-bold" : ""}`}>{item.label}</span>}
-                {isActive && !isCollapsed && item.label !== "Live Job Market" && (
-                  <ChevronRight className="ml-auto h-3.5 w-3.5 shrink-0 text-purple-400" />
+                {!isCollapsed && <span className="truncate">{item.label}</span>}
+                {isActive && !isCollapsed && (
+                  <ChevronRight className="ml-auto h-3.5 w-3.5 shrink-0 text-emerald-500" />
                 )}
               </SidebarMenuButton>
             );
