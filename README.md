@@ -1,279 +1,259 @@
-# 🚀 SkillProof - Evidence-Based Skill Verification & Job Matching
+# SkillProof
 
-> One platform that takes a student from learning → building → proving skills → applying → interviewing → getting hired.
+> **Prove Your Skills. Not Just Claim Them.**
 
----
+Evidence-based skill verification + live job market intelligence, powered by **SerpApi**.
 
-## 📌 About
-
-SkillProof is an evidence-based skill verification and job matching platform for students and early-career developers.
-
-Instead of relying only on what a résumé claims, SkillProof connects résumé skill claims with publicly accessible GitHub evidence to provide a transparent assessment of how strongly those claims are supported.
-
-The platform combines AI-powered résumé analysis, GitHub evidence analysis, job-description matching, skill-gap detection, interview preparation, and career development into one unified workspace.
+**Built for SerpApi India Hackathon 2026 — Open Innovation Track**
 
 ---
 
-## ✨ Features
+## 🎯 What It Does
 
-### 1. 🤖 AI Resume Builder
-- Upload PDF resume, AI parses and extracts all data
-- AI rewrites bullet points for specific job roles
-- Save multiple resume versions
-- Export as PDF
+SkillProof verifies resume skills against **real GitHub evidence** and **live job market data**. Instead of trusting claims, it shows proof — and tells you exactly what the market is demanding right now.
 
-### 2. 🔍 ATS Scanner
-- AI-powered resume vs job description analysis
-- Score out of 100 with visual gauge
-- Shows matched keywords (green) & missing keywords (red)
-- AI-generated improvement suggestions
-
-### 3. 🧠 AI Career Mentor
-- Chat-based career guidance
-- Personalized learning roadmaps
-- Course & project recommendations
-- Knows your skills and target role
-
-### 4. 💼 Internship Finder
-- AI-ranked job listings with match scores
-- Filter by role, location, remote/onsite
-- Save jobs to wishlist
-
-### 5. 🎤 AI Interview Coach
-- Text mode & Voice mode (speech-to-text)
-- Role-specific questions
-- Real-time scores: Confidence, Clarity, Technical
-
-### 6. 🎙️ AI Voice Mock Interview
-- **Real-time voice conversation** with AI interviewer
-- **Speech-to-text** using Web Speech API
-- **Dynamic questions** based on your profile (target role + skills)
-- **AI evaluates** your answer immediately:
-  - Technical Accuracy (0-100)
-  - Communication Clarity (0-100)
-  - Confidence Level (0-100)
-- **Follow-up questions** based on previous answers
-- **Text input fallback** if microphone is not available
-- **Final summary report** with:
-  - Overall score
-  - Top strengths
-  - Areas to improve
-  - Suggested topics to study
-- **Interview history** saved to database
-- **Beautiful chat interface** like ChatGPT/WhatsApp
-
-### 7. 📊 Coding Tracker
-- DSA topic mastery (Arrays, Trees, Graphs, DP)
-- Streak counter & contest history
-- Daily challenges
-
-### 8. 💼 LinkedIn Optimizer
-- AI headline generator
-- About section rewrite
-- Skill suggestions
-
-### 9. 🌐 Portfolio Generator
-- 3-5 design templates
-- Auto-fill from resume data
-- One-click deploy to Vercel
+**Flow:** `Claim → Verify → Match → Act`
 
 ---
 
-# 🛡️ SkillProof Core — Evidence-Based Skill Verification
+## ✨ Features (5 Core)
 
-SkillProof's core differentiator is its ability to compare **what a candidate claims** with **what their publicly accessible work actually demonstrates**.
+### 1. 🛡️ Skill Assessment
+Deep evidence verification. Extracts skills from your resume, inspects your GitHub repositories (commits, tests, CI workflows, documentation), and assigns each skill a verdict:
+- **PROVEN** — Strong evidence found
+- **PARTIAL** — Some evidence present
+- **CLAIMED-ONLY** — No public evidence
 
-Rather than rebuilding the entire platform, SkillProof extends the existing career workspace with a dedicated evidence-based assessment workflow.
+Every verdict comes with clickable evidence links so users can inspect the proof.
 
-### 10. 🔬 Evidence-Based Assessment
+### 2. 🔍 GitHub Analysis
+Full GitHub profile scan — commit frequency, language composition, repository complexity, documentation quality, and test coverage metrics.
 
-The user uploads a résumé, enters a GitHub username, and selects a target role.
+### 3. ✅ SkillProof
+One-shot verification dashboard. Upload your resume PDF, connect your GitHub username, and get a complete evidence-backed skill profile in seconds.
 
-SkillProof then:
+### 4. 📊 Gap Report
+Market-aware skill gap analysis. Compares your verified skills against **live job demand** and shows which missing skills are actively being requested by employers — with green/red badges indicating market demand.
 
-- Extracts claimed skills from the résumé
-- Analyzes accessible public GitHub repositories
-- Inspects relevant repository evidence
-- Connects evidence back to individual skill claims
-- Generates an evidence-based assessment for each skill
-
-**Priority:** P0 — Essential
-
----
-
-### 11. 🏷️ Three Evidence-Based Skill Labels
-
-Every assessed skill receives one of three evidence-based verdicts:
-
-#### 🟢 Proven
-Sufficiently strong and relevant evidence supports the specific claim.
-
-#### 🟡 Partial
-Evidence supports only part of the claim or the available evidence is incomplete.
-
-#### ⚪ Claimed-only
-The résumé claims the skill, but the available evidence does not substantiate it.
-
-**Priority:** P0 — Essential
-
-> These labels describe the strength of the available evidence. They do not claim that publicly visible repository activity conclusively proves overall mastery.
+### 5. 💼 Live Job Market
+Real-time job listings fetched live from LinkedIn, Naukri, and Indeed — filtered by role and location. Powered by SerpApi's Google Search engine.
 
 ---
 
-### 12. 🔗 Clickable Evidence for Every Verdict
+## 🔌 SerpApi Integration (Why It's Core)
 
-SkillProof does not simply display a green badge, red badge, or numerical score.
+SerpApi powers the **live market intelligence layer** of SkillProof. Without it, the platform would only see past evidence (GitHub). With it, we see the live present (job market demand).
 
-Every skill result should explain **why** it received its verdict and provide links to relevant evidence such as:
+| Feature | SerpApi Engine | Usage |
+|---------|---------------|-------|
+| **Live Job Market** | `google` | Fetch real-time job listings via `site:linkedin.com OR site:naukri.com OR site:indeed.co.in` |
+| **Gap Report** | `google` | Extract market-demanded skills from live job snippets |
 
-- GitHub repositories
-- Source files
-- Dependency/configuration files
-- Commits
-- Tests
-- Documentation
-- Deployments
-- Pull requests
-- Other relevant public contribution evidence
+**Implementation:** `lib/serpapi.ts`
 
-The user can inspect the evidence behind a verdict instead of blindly trusting an AI-generated score.
+```typescript
+export async function searchJobs(query: string, location: string = 'Mumbai') {
+  return serpapiSearch({
+    engine: 'google',
+    q: `${query} jobs ${location} site:linkedin.com OR site:naukri.com OR site:indeed.co.in`,
+    gl: 'in',
+    hl: 'en',
+    num: 20,
+  });
+}
+```
 
-**Priority:** P0 — Main Differentiator
-
----
-
-### 13. 🎯 Job-Readiness Gap Report
-
-SkillProof compares the skills required by a job description with the evidence found for the candidate.
-
-The report identifies:
-
-- ✅ Supported skills
-- ⚠️ Skills with insufficient evidence
-- ❌ Missing requirements
-- 📊 Overall job-readiness match
-- 🧩 Skill gaps
-- 📝 A short actionable micro-task for each gap
-
-Instead of simply telling a candidate what they are missing, SkillProof gives them a practical next step for improving that specific gap.
-
-**Priority:** P0 — Required by the Problem Statement
+**Optimizations:**
+- ✅ Server-side API calls only (key never exposed to client)
+- ✅ Response caching via `revalidate: 3600` (1-hour cache, preserves free-tier quota)
+- ✅ Graceful fallback if SerpApi is unavailable
+- ✅ Query batching to avoid duplicate requests
 
 ---
 
-# 🔎 Evidence Trail
+## 🏗️ Architecture
 
-SkillProof introduces an **Evidence Trail** for every assessed skill.
-
-For example, if a résumé claims **Python**, the Evidence Trail could show:
-
-### Evidence Found
-A linked repository containing Python source files and tests.
-
-### Evidence Strength
-Partial or strong, based on the actual evidence inspected.
-
-### What It Supports
-Use of Python and the specific implementation observed in the repository.
-
-### What It Does Not Prove
-Independent mastery, professional production experience, or the ability to solve an unfamiliar problem.
-
-SkillProof treats repository activity as **evidence, not conclusive proof of ability**.
-
-A candidate should not be labelled **"Proven in Python"** simply because a repository contains Python files.
-
-The strength of the verdict should depend on the relevance, depth and quality of the available evidence.
-
-If time permits, SkillProof can also provide a short role-specific micro-task to directly test a claimed skill.
+<img width="1175" height="1339" alt="Workflow - SerpApi" src="https://github.com/user-attachments/assets/74078aa6-00bb-4209-9fe4-5852b1b3fc8f" />
 
 ---
-
-# ⚙️ SkillProof Workflow
-
-<img width="1161" height="1355" alt="image" src="https://github.com/user-attachments/assets/8756bf78-b439-4157-a241-1bc9b2626f47" />
-
 
 ## 🛠️ Tech Stack
 
-| Category | Technology |
-|----------|------------|
-| **Frontend** | Next.js 16, TypeScript, Tailwind CSS, Shadcn/ui |
+| Layer | Technology |
+|-------|-----------|
+| **Frontend** | Next.js 16 (App Router), TypeScript, Tailwind CSS, shadcn/ui |
 | **Backend** | Next.js API Routes, Prisma ORM |
-| **Database** | PostgreSQL (production) / SQLite (development) |
-| **Authentication** | Clerk |
+| **Database** | SQLite (dev) / PostgreSQL (prod) |
+| **Auth** | Clerk |
 | **AI** | Groq (`openai/gpt-oss-120b`), Gemini (`gemini-3.8-flash`) |
-| **GitHub Integration** | GitHub API |
-| **Voice** | Web Speech API |
+| **Search** | **SerpApi** (Google Search API) |
+| **Evidence** | GitHub REST API |
 | **Deployment** | Vercel |
 
 ---
 
-## 🏗️ AI Architecture
+## 🚀 Installation & Setup
 
-| Module | AI / Processing |
-|--------|-----------------|
-| Resume Builder (PDF Parse) | Gemini (`gemini-3.8-flash`) |
-| ATS Scanner | Groq (`openai/gpt-oss-120b`) |
-| Career Mentor | Groq (`openai/gpt-oss-120b`) |
-| Internship Finder | Groq (`openai/gpt-oss-120b`) |
-| Interview Coach | Groq (`openai/gpt-oss-120b`) |
-| LinkedIn Optimizer | Groq (`openai/gpt-oss-120b`) |
-| Portfolio Generator | Groq (`openai/gpt-oss-120b`) |
-| **Voice Mock Interview** | **Groq (`openai/gpt-oss-120b`) + Web Speech API** |
-| **Evidence-Based Skill Assessment** | **Deterministic GitHub Evidence + AI Interpretation** |
-| **Job-Readiness Gap Analysis** | **AI + Evidence-Based Skill Matching** |
-| Coding Tracker | No AI |
-
-> AI is used to interpret, normalize and explain retrieved evidence. Concrete GitHub evidence should come from actual publicly accessible project data wherever possible.
-
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-- Node.js 18+
-- PostgreSQL or SQLite
-- Git
-- GitHub API configuration
-- Clerk authentication configuration
-- Groq API key
-- Gemini API key
-
-### Installation
+### 1. Clone the repository
 
 ```bash
-# Clone repository
-git clone https://github.com/aryancodex-19/NavNirman-SkillProof.git
-cd NavNirman-SkillProof
+git clone https://github.com/aryancodex-19/SerpApi.git
+cd SerpApi
+```
 
-# Install dependencies
+### 2. Install dependencies
+
+```bash
 npm install
+```
 
-# Setup environment variables
-cp .env.example .env.local
+### 3. Configure environment variables
 
-# Generate Prisma Client
+Create a `.env.local` file in the project root:
+
+```env
+# SerpApi (required — get free key from https://serpapi.com)
+SERPAPI_API_KEY=your_serpapi_key_here
+
+# Database
+DATABASE_URL=file:./dev.db
+
+# AI Providers
+GROQ_API_KEY=your_groq_key_here
+GEMINI_API_KEY=your_gemini_key_here
+
+# Clerk Authentication
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
+CLERK_SECRET_KEY=your_clerk_secret_key
+NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
+NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
+NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/dashboard
+NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/dashboard
+```
+
+### 4. Initialize the database
+
+```bash
 npx prisma generate
-
-# Setup database
 npx prisma db push
+```
 
-# Run development server
+### 5. Start the development server
+
+```bash
 npm run dev
 ```
 
-## 📸 Screenshots / Demo
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-<img width="1917" height="913" alt="image" src="https://github.com/user-attachments/assets/6f1f096d-7ca8-4359-aea1-497fbabbfa57" />
-<img width="1917" height="911" alt="image" src="https://github.com/user-attachments/assets/f2fcd281-2b5a-4e55-a8ce-2f49f2ae7628" />
+### 6. Build for production
 
-## 👥 Team Members
+```bash
+npm run build
+npm start
+```
 
-| # | Team Member |
-|---|---|
-| 1 | **Utkarsh Pandey** |
-| 2 | **Aryan Pal** |
-| 3 | **Shashank Sharma** |
-| 4 | **Ravi Niranjan Sharma** |
+---
+
+## 🔐 Authentication
+
+SkillProof uses **Clerk** for authentication.
+
+- Sign-in / Sign-up routes: `/sign-in`, `/sign-up`
+- Protected routes: everything under `/dashboard`
+- After successful auth: users are redirected to `/dashboard`
+- Session management is handled by Clerk middleware (`middleware.ts` / `proxy.ts`)
+
+---
+
+## 📸 Demo
+
+**Video:** [Add your 3-minute demo link here]
+
+---
+
+## 🎬 Demo Flow (3 minutes)
+
+1. **Problem** — Resumes claim skills but provide no proof
+2. **Skill Assessment** — GitHub-verified skill verdicts (PROVEN/PARTIAL/CLAIMED)
+3. **SkillProof** — One-shot verification dashboard
+4. **Gap Report** — Market-aware gap analysis with live demand badges
+5. **Live Job Market** — Real-time job listings via SerpApi ⭐
+6. **Closing** — Claim → Verify → Match → Act
+
+---
+
+## 📁 Project Structure
+
+```
+app/
+├── dashboard/
+│   ├── page.tsx              # Dashboard overview
+│   ├── assessment/           # Skill Assessment (deep verification)
+│   ├── github/               # GitHub Analysis
+│   ├── skillproof/           # SkillProof (upload-based)
+│   ├── gap-report/           # Market-aware gap analysis
+│   └── job-market/           # Live Job Market (SerpApi)
+├── api/
+│   ├── assessment/           # Skill verdict endpoints
+│   ├── github/               # GitHub evidence fetching
+│   ├── skillproof/           # Verification logic
+│   ├── gap-report/           # Gap analysis
+│   └── serp/                 # SerpApi endpoints
+├── sign-in/                  # Clerk auth
+└── sign-up/
+
+lib/
+└── serpapi.ts                # SerpApi client (cached)
+
+components/
+├── assessment/               # Skill Assessment UI
+├── skillproof/               # SkillProof UI
+├── gap-report/               # Gap Report UI
+├── job-market/               # Live Job Market UI
+├── github/                   # GitHub Analysis UI
+└── dashboard/                # Sidebar, stats, layout
+
+prisma/
+└── schema.prisma             # Database schema
+```
+
+---
+
+## 🔒 Security
+
+- SerpApi key stored server-side only (`.env.local`, never in client bundle)
+- All SerpApi calls made via Next.js API routes
+- No sensitive data committed to repository
+- `.env.local` is in `.gitignore`
+- Clerk handles session tokens and auth state
+- Database queries scoped by authenticated `userId`
+
+---
+
+## 🧠 AI Tools Disclosed
+
+- **Groq** — Resume parsing, skill extraction, evidence reasoning
+- **Gemini** — Long-context analysis, career recommendations
+- **SerpApi** — Live search data (core integration)
+- **GitHub API** — Public code evidence
+
+---
+
+## 👥 Team Name : NavNirman
+
+---
+
+## 📄 License
+
+Built for **SerpApi India Hackathon 2026** — Open Innovation Track.
+
+---
+
+## 🙏 Acknowledgments
+
+- **SerpApi** — For the live search infrastructure that makes market intelligence possible
+- **Clerk** — Authentication
+- **Groq & Google** — AI inference
+- **GitHub** — Public evidence API
+- **Vercel** — Deployment platform
