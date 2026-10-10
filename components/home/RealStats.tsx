@@ -2,40 +2,46 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { Users, FileText, Video } from "lucide-react";
-import GlassCard from "@/components/ui/GlassCard";
+import { ShieldCheck, Code2, Briefcase, Activity } from "lucide-react";
 
 interface RealStatsProps {
   stats: {
-    totalUsers: number;
-    totalResumes: number;
-    totalInterviews: number;
+    skillsVerified: number;
+    reposAnalyzed: number;
+    liveJobsIndexed: number;
+    assessmentsRun: number;
   };
 }
 
 export default function RealStats({ stats }: RealStatsProps) {
   const cards = [
     {
-      label: "Active Students",
-      value: stats.totalUsers.toLocaleString(),
-      description: "Building their futures on SkillProof",
-      icon: Users,
+      label: "SKILLS VERIFIED",
+      value: stats.skillsVerified.toLocaleString(),
+      description: "Proven against GitHub evidence",
+      icon: ShieldCheck,
       glow: "purple" as const,
     },
     {
-      label: "Resumes Built",
-      value: stats.totalResumes.toLocaleString(),
-      description: "ATS-optimized resume drafts",
-      icon: FileText,
+      label: "GITHUB REPOS ANALYZED",
+      value: stats.reposAnalyzed.toLocaleString(),
+      description: "Codebases inspected securely",
+      icon: Code2,
       glow: "violet" as const,
     },
-
     {
-      label: "Mock Interviews Done",
-      value: stats.totalInterviews.toLocaleString(),
-      description: "Completed voice and chat practice",
-      icon: Video,
+      label: "LIVE JOBS INDEXED",
+      value: stats.liveJobsIndexed.toLocaleString(),
+      description: "Real-time from SerpApi",
+      icon: Briefcase,
       glow: "indigo" as const,
+    },
+    {
+      label: "ASSESSMENTS RUN",
+      value: stats.assessmentsRun.toLocaleString(),
+      description: "Deep verification scans",
+      icon: Activity,
+      glow: "purple" as const,
     },
   ];
 
@@ -44,13 +50,13 @@ export default function RealStats({ stats }: RealStatsProps) {
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="text-center max-w-2xl mx-auto mb-16 space-y-4">
           <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
-            Built for Students,{" "}
-            <span className="bg-gradient-to-r from-purple-400 to-indigo-400 bg-clip-text text-transparent">
-              Proven by Metrics
+            Built on Real Evidence,{" "}
+            <span className="text-zinc-50">
+              Powered by Live Data
             </span>
           </h2>
           <p className="text-gray-400 text-sm leading-relaxed">
-            Real-time aggregate activity across SkillProof. No arbitrary claims—just transparent platform metrics.
+            Aggregate activity across SkillProof. Every number is backed by real verification.
           </p>
         </div>
 
@@ -63,27 +69,26 @@ export default function RealStats({ stats }: RealStatsProps) {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.1 }}
             >
-              <GlassCard
-                glowColor={card.glow}
-                className="p-6 flex flex-col justify-between h-52 group hover:scale-[1.03] transition-all duration-300"
+              <div
+                className="p-6 flex flex-col justify-between h-52 group bg-zinc-900 border border-zinc-800 rounded-lg hover:border-zinc-700 transition-colors"
               >
                 <div className="flex items-center justify-between">
                   <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
                     {card.label}
                   </span>
-                  <div className="p-2 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-400 group-hover:scale-110 transition-transform">
+                  <div className="p-2 rounded-xl bg-zinc-800 border border-zinc-700 text-zinc-400 group-hover:scale-110 transition-transform">
                     <card.icon className="h-4 w-4" />
                   </div>
                 </div>
                 <div className="mt-4">
-                  <p className="text-4xl font-extrabold text-white tracking-tight bg-gradient-to-b from-white to-gray-300 bg-clip-text">
+                  <p className="text-4xl font-extrabold text-white tracking-tight">
                     {card.value}
                   </p>
                   <p className="text-xs text-gray-400 mt-2 font-medium">
                     {card.description}
                   </p>
                 </div>
-              </GlassCard>
+              </div>
             </motion.div>
           ))}
         </div>

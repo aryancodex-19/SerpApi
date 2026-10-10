@@ -36,19 +36,18 @@ export default function RealStatsCards({
       {stats.map((stat) => (
         <GlassCard
           key={stat.label}
-          glowColor={stat.glow}
           className="p-5 flex flex-col justify-between h-full bg-white/[0.03] border-white/10"
         >
           <div className="flex items-center justify-between gap-2">
             <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
               {stat.label}
             </span>
-            <div className="p-1.5 rounded-lg bg-purple-500/10 border border-purple-500/20 text-purple-400">
-              <stat.icon className="h-4 w-4" />
+            <div className="p-1.5">
+              <stat.icon className="h-4 w-4 text-zinc-500" />
             </div>
           </div>
           <div className="mt-4">
-            <p className="text-3xl font-extrabold text-white bg-gradient-to-b from-white to-gray-200 bg-clip-text">
+            <p className="font-mono text-3xl text-zinc-50">
               {stat.value}
             </p>
             <p className="text-[11px] text-gray-400 mt-1 font-medium">

@@ -3,72 +3,38 @@
 import React from "react";
 import { motion } from "framer-motion";
 import {
-  FileText,
-  ScanSearch,
-  BrainCircuit,
-  Briefcase,
-  Video,
-  Mic,
+  ShieldCheck,
   Code2,
-  Share2,
-  GitGraph,
+  BadgeCheck,
+  TrendingUp,
+  Briefcase
 } from "lucide-react";
-import GlassCard from "@/components/ui/GlassCard";
 
 const MODULES = [
   {
-    icon: FileText,
-    title: "AI Resume Builder",
-    description: "Build ATS-optimized resumes with real-time AI suggestions, keyword mapping, and PDF exports.",
-    glow: "purple" as const,
-  },
-  {
-    icon: ScanSearch,
-    title: "ATS Scanner",
-    description: "Scan your resume against any target job description and secure a deep compatibility score breakdown.",
-    glow: "violet" as const,
-  },
-  {
-    icon: BrainCircuit,
-    title: "AI Career Mentor",
-    description: "Map your study pathway, find skill gaps, and explore tailored career roadmaps with AI guidance.",
-    glow: "indigo" as const,
-  },
-  {
-    icon: Briefcase,
-    title: "Internship Finder",
-    description: "Scrape and match local internships tailored to your target roles, skills, and geo-location preferences.",
-    glow: "purple" as const,
-  },
-  {
-    icon: Video,
-    title: "AI Interview Coach",
-    description: "Run custom mock sessions and get instant critiques on your answers and confidence scores.",
-    glow: "violet" as const,
-  },
-  {
-    icon: Mic,
-    title: "AI Voice Interview",
-    description: "Engage in live voice mocks with natural voice synthesis, follow-ups, and tone assessments.",
-    glow: "purple" as const,
+    icon: ShieldCheck,
+    title: "Skill Assessment",
+    description: "Cross-verify every resume skill against real GitHub evidence. Get PROVEN, PARTIAL, or CLAIMED verdicts with clickable evidence links.",
   },
   {
     icon: Code2,
-    title: "Coding Tracker",
-    description: "Log solved problems across LeetCode & Codeforces and monitor streaks and topic mastery.",
-    glow: "indigo" as const,
+    title: "GitHub Analysis",
+    description: "Deep profile scan — commit frequency, language composition, test coverage, and documentation quality metrics.",
   },
   {
-    icon: Share2,
-    title: "LinkedIn Optimizer",
-    description: "Audit search keywords, rewrite bio copy, and streamline headlines for maximum recruiter search visibility.",
-    glow: "violet" as const,
+    icon: BadgeCheck,
+    title: "SkillProof",
+    description: "One-shot verification: upload resume, connect GitHub, get a complete evidence-backed skill profile in seconds.",
   },
   {
-    icon: GitGraph,
-    title: "GitHub Deep Analysis",
-    description: "Inspect commits frequency, tech stack composition, and documentation coverage metrics.",
-    glow: "purple" as const,
+    icon: TrendingUp,
+    title: "Gap Report",
+    description: "Market-aware gap analysis. See exactly which missing skills live jobs are demanding — powered by SerpApi.",
+  },
+  {
+    icon: Briefcase,
+    title: "Live Job Market",
+    description: "Real-time job listings from LinkedIn, Naukri, and Indeed — filtered by role and location via SerpApi Google Search.",
   },
 ];
 
@@ -78,13 +44,13 @@ export default function FeaturesGrid() {
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="text-center max-w-2xl mx-auto mb-16 space-y-4">
           <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
-            Everything You Need,{" "}
-            <span className="bg-gradient-to-r from-purple-400 to-indigo-400 bg-clip-text text-transparent">
-              in a Single Workspace
+            Everything You Need for{" "}
+            <span className="text-zinc-50">
+              Proof-Backed Hiring
             </span>
           </h2>
           <p className="text-gray-400 text-sm leading-relaxed">
-            Access 9 purpose-built AI engines designed to guide you through the entire career lifecycle.
+            Five core tools. One unified workflow: Claim &rarr; Verify &rarr; Match &rarr; Act.
           </p>
         </div>
 
@@ -97,27 +63,21 @@ export default function FeaturesGrid() {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.05 }}
             >
-              <GlassCard
-                glowColor={module.glow}
-                className="p-8 flex flex-col justify-between h-64 group cursor-pointer border-white/10 hover:border-purple-500/40"
+              <div
+                className="p-8 flex flex-col justify-between h-64 group cursor-pointer bg-zinc-900 border border-zinc-800 rounded-lg hover:border-zinc-700 transition-colors"
               >
                 <div className="space-y-4">
-                  <div className="inline-flex items-center justify-center p-3 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-400 group-hover:scale-110 group-hover:bg-purple-500/20 group-hover:border-purple-500/40 group-hover:shadow-[0_0_20px_rgba(168,85,247,0.3)] transition-all duration-300">
+                  <div className="inline-flex items-center justify-center p-3 rounded-md bg-zinc-800 border border-zinc-700 text-zinc-400 group-hover:scale-110 transition-all duration-300">
                     <module.icon className="h-5 w-5" />
                   </div>
-                  <h3 className="text-lg font-bold text-white group-hover:text-purple-300 transition-colors">
+                  <h3 className="text-lg font-bold text-zinc-100 transition-colors">
                     {module.title}
                   </h3>
                   <p className="text-xs text-gray-400 leading-relaxed">
                     {module.description}
                   </p>
                 </div>
-
-                <div className="flex items-center gap-1.5 text-xs font-bold text-purple-400 opacity-80 group-hover:opacity-100 group-hover:translate-x-1.5 transition-all duration-300 pt-2">
-                  <span>Explore Module</span>
-                  <span>&rarr;</span>
-                </div>
-              </GlassCard>
+              </div>
             </motion.div>
           ))}
         </div>

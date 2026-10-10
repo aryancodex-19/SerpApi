@@ -29,22 +29,11 @@ export default function WelcomeBanner({ displayName, targetRole }: WelcomeBanner
 
         <div className="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-8">
           <div className="space-y-4">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/15 border border-purple-500/30 text-purple-300 shadow-[0_0_12px_rgba(168,85,247,0.2)]">
-              <Sparkles className="h-3.5 w-3.5 text-purple-400" />
-              <span className="text-[10px] font-bold uppercase tracking-wider">
-                SkillProof Member
-              </span>
-            </div>
-
-            <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight leading-tight">
-              Welcome back,{" "}
-              <span className="bg-gradient-to-r from-purple-400 via-violet-300 to-indigo-300 bg-clip-text text-transparent">
-                {displayName}
-              </span>
-              !
+            <h1 className="text-2xl font-semibold text-zinc-50 tracking-tight leading-tight">
+              Welcome back, {displayName}
             </h1>
 
-            <p className="text-gray-300 text-sm max-w-xl leading-relaxed">
+            <p className="text-sm text-zinc-400 max-w-2xl leading-relaxed">
               Your AI career workspace is ready. Verify your skills with real evidence, analyze live job market demand, and optimize your resume for real opportunities.
             </p>
 
