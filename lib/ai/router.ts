@@ -17,7 +17,8 @@ type TaskType =
   | "mentor_chat"       // Groq - low latency
   | "interview_eval"    // Groq - real-time
   | "linkedin_optimize" // Groq - short output
-  | "portfolio_generate"; // Gemini - structured output
+  | "portfolio_generate" // Gemini - structured output
+  | "market_skills"; // Extract skills as JSON
 
 export async function routeAI(task: TaskType, input: any) {
   switch (task) {
@@ -142,6 +143,24 @@ export async function routeAI(task: TaskType, input: any) {
         };
       }
       throw new Error("AI portfolio generation service is temporarily unavailable.");
+
+    case "market_skills":
+      if (groq) {
+        const completion = await groq.chat.completions.create({
+          model: "openai/gpt-oss-120b",
+          messages: [
+            { role: "system", content: "You are an expert technical recruiter. Extract the top 8 most mentioned skills from the following job snippets. Return ONLY valid JSON in this format: { \"skills\": [\"Skill1\", \"Skill2\"] }" },
+            { role: "user", content: typeof input === "string" ? input : JSON.stringify(input) }
+          ],
+          response_format: { type: "json_object" },
+        });
+        return {
+          response: {
+            text: () => completion.choices[0]?.message?.content || "{\"skills\":[]}",
+          },
+        };
+      }
+      throw new Error("AI market skills service is temporarily unavailable.");
 
     default:
       if (!groq) {

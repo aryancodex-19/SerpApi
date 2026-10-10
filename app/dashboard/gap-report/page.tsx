@@ -31,6 +31,13 @@ export default async function GapReportPage() {
   const initialGapReport = gitHubRecord?.analysisData?.latestGapReport || null;
   const latestAssessment = gitHubRecord?.analysisData?.latestAssessment || null;
 
+  let userVerifiedSkills: string[] = [];
+  if (latestAssessment && Array.isArray(latestAssessment.skills)) {
+    userVerifiedSkills = latestAssessment.skills
+      .filter((s: any) => s.state === "SUPPORTED" || s.state === "PARTIAL")
+      .map((s: any) => s.skill.toLowerCase());
+  }
+
   return (
     <PageTransition>
       <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 space-y-6">
@@ -79,6 +86,7 @@ export default async function GapReportPage() {
           initialGapReport={initialGapReport}
           hasAssessment={!!latestAssessment}
           targetRole={user?.targetRole || "Full Stack Engineer"}
+          userVerifiedSkills={userVerifiedSkills}
         />
       </div>
     </PageTransition>

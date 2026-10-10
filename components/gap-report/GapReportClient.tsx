@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useTransition, useMemo } from "react";
+import React, { useState, useTransition, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import {
@@ -20,7 +20,10 @@ import {
   ArrowRight,
   RefreshCw,
   FileText,
+  Briefcase,
+  Search,
 } from "lucide-react";
+import Link from "next/link";
 import GlassCard from "@/components/ui/GlassCard";
 import { GapReport, GapItem, GapState } from "@/lib/gap-report/engine";
 
@@ -28,6 +31,7 @@ interface GapReportClientProps {
   initialGapReport: GapReport | null;
   hasAssessment: boolean;
   targetRole: string;
+  userVerifiedSkills?: string[];
 }
 
 const STATE_CONFIG: Record<
@@ -77,7 +81,7 @@ const READINESS_CONFIG = {
   "Significant Gaps": { color: "text-red-400", bar: "bg-red-500", label: "Significant Gaps" },
 };
 
-function GapItemCard({ gap }: { gap: GapItem }) {
+function GapItemCard({ gap, marketSkills }: { gap: GapItem, marketSkills: string[] }) {
   const [expanded, setExpanded] = useState(false);
   const sc = STATE_CONFIG[gap.state];
   const pc = PRIORITY_CONFIG[gap.microtask.priority];
@@ -111,6 +115,18 @@ function GapItemCard({ gap }: { gap: GapItem }) {
         <span className="text-[9px] text-gray-500 shrink-0 hidden sm:block">
           {gap.importance === "REQUIRED" ? "Required" : gap.importance === "PREFERRED" ? "Preferred" : "Nice-to-have"}
         </span>
+
+        {(gap.state === "NOT_EVIDENCED" || gap.state === "PARTIAL") && (
+          <span
+            className={`text-[9px] font-bold px-1.5 py-0.5 rounded border shrink-0 hidden sm:block ${
+              marketSkills.some((s) => s.toLowerCase() === gap.skill.toLowerCase())
+                ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400"
+                : "bg-white/5 border-white/10 text-gray-500"
+            }`}
+          >
+            {marketSkills.some((s) => s.toLowerCase() === gap.skill.toLowerCase()) ? "Demanded in live market" : "Low demand"}
+          </span>
+        )}
 
         {expanded ? (
           <ChevronUp className="w-4 h-4 text-gray-500 shrink-0" />
@@ -201,12 +217,40 @@ export default function GapReportClient({
   initialGapReport,
   hasAssessment,
   targetRole,
+  userVerifiedSkills = [],
 }: GapReportClientProps) {
   const [jobDescription, setJobDescription] = useState("");
   const [report, setReport] = useState<GapReport | null>(initialGapReport);
   const [isGenerating, startGenerating] = useTransition();
   const [filter, setFilter] = useState<"all" | GapState>("all");
   const [importanceFilter, setImportanceFilter] = useState<"all" | "REQUIRED" | "PREFERRED">("all");
+
+  const [marketSkills, setMarketSkills] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (!targetRole) return;
+    
+    let isMounted = true;
+    const fetchMarketSkills = async () => {
+      try {
+        const res = await fetch("/api/serp/market-skills", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ role: targetRole, location: "Mumbai" }),
+        });
+        const data = await res.json();
+        if (data.success && isMounted) {
+          setMarketSkills(data.skills || []);
+        }
+      } catch (err) {
+        console.error("Failed to silently fetch market data", err);
+      }
+    };
+    
+    fetchMarketSkills();
+    
+    return () => { isMounted = false; };
+  }, [targetRole]);
 
   const handleGenerate = () => {
     if (!jobDescription.trim() || jobDescription.trim().length < 30) {
@@ -249,6 +293,7 @@ export default function GapReportClient({
 
   return (
     <div className="space-y-6">
+
       {/* Input card */}
       <GlassCard className="p-6 sm:p-8 space-y-6 border-white/10 bg-gradient-to-b from-white/[0.03] to-white/[0.01]">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -464,16 +509,25 @@ export default function GapReportClient({
               ) : (
                 <div className="space-y-2">
                   {filteredGaps.map((gap) => (
-                    <GapItemCard key={gap.skill} gap={gap} />
+                    <GapItemCard key={gap.skill} gap={gap} marketSkills={marketSkills} />
                   ))}
                 </div>
               )}
             </GlassCard>
 
-            {/* Notice */}
             <p className="text-[10px] text-gray-500 text-center leading-relaxed max-w-3xl mx-auto">
               {report.notice}
             </p>
+
+            <div className="flex justify-center mt-6">
+              <Link 
+                href="/dashboard/job-market"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-bold text-sm transition-all"
+              >
+                <Search className="w-4 h-4 text-indigo-400" />
+                See Live Job Listings for {targetRole} &rarr;
+              </Link>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

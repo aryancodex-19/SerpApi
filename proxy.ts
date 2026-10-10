@@ -4,14 +4,8 @@ const isProtectedRoute = createRouteMatcher([
   "/dashboard(.*)",
   "/profile(.*)",
   "/api/resume(.*)",
-  "/api/portfolio(.*)",
-  "/api/mentor(.*)",
-  "/api/interview(.*)",
-  "/api/interview-voice(.*)",
-  "/api/internships(.*)",
   "/api/github(.*)",
-  "/api/coding(.*)",
-  "/api/ats(.*)",
+
   "/api/skillproof(.*)",
 ]);
 
